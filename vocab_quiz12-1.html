@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Vocabulary Quiz</title>
+<style>
+  body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(to bottom right, #f7d794, #f78fb3); margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+  .container { background: #fff; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 90%; max-width: 600px; text-align: center; }
+  h1 { font-size: 2em; margin-bottom: 20px; color: #ff6b81; }
+  .question { font-size: 1.3em; margin-bottom: 20px; }
+  .choice { display: block; margin: 10px 0; padding: 12px; font-size: 1em; background: #f0f0f0; border-radius: 12px; border: none; cursor: pointer; transition: all 0.2s; }
+  .choice:hover { background: #ffd6e0; transform: scale(1.03); }
+  .correct { background: #a8e6a1 !important; transform: scale(1.05); }
+  .wrong { background: #f7a8a8 !important; transform: scale(1.05); }
+  #nextBtn { margin-top: 20px; padding: 12px 25px; font-size: 1em; border-radius: 12px; border: none; background: #ff6b81; color: white; cursor: pointer; display: none; transition: all 0.2s; }
+  #nextBtn:hover { background: #ff4757; transform: scale(1.05); }
+  #message { margin-top: 15px; font-weight: bold; height: 24px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Vocabulary Quiz🔥</h1>
+  <div id="quiz-container">
+    <div id="question" class="question"></div>
+    <div id="choices"></div>
+    <button id="nextBtn">次へ</button>
+    <div id="message"></div>
+  </div>
+  <div id="result" style="display:none;">
+    <h2>🎉 おつかれさま！</h2>
+    <p>全問終了です。今日の単語をワークで使ってみよう💪</p>
+  </div>
+</div>
+
+<script>
+const quiz = [
+  {q:'「〜したい」という意味は？', a:'want', choices:['want','help','permit','ask']},
+  {q:'「助ける」という意味は？', a:'help', choices:['help','allow','enable','ask']},
+  {q:'「警察官」を意味する英単語は？', a:'police officer', choices:['police officer','driver','teacher','soldier']},
+  {q:'「言った（tellの過去形）」は？', a:'told', choices:['told','say','asked','speak']},
+  {q:'「外に出る」という意味は？', a:'get out', choices:['get out','pick me up','allow','stand up']},
+  {q:'「質問する／頼む」という意味は？', a:'ask', choices:['permit','ask','help','want']},
+  {q:'「私を迎えに来る」は？', a:'pick me up', choices:['pick me up','bring me','call me','get me']},
+  {q:'「〜を許す」という意味は？', a:'allow', choices:['allow','help','want','get out']},
+  {q:'「可能にする」という意味は？', a:'enable', choices:['enable','permit','allow','help']},
+  {q:'「許可する」という意味は？', a:'permit', choices:['permit','want','told','ask']}
+];
+
+let current = 0;
+
+// 配列をランダムに並べ替える関数
+function shuffleArray(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+function showQuestion() {
+  const q = quiz[current];
+  document.getElementById('question').textContent = q.q;
+  const choicesDiv = document.getElementById('choices');
+  choicesDiv.innerHTML = '';
+  document.getElementById('message').textContent = '';
+  document.getElementById('nextBtn').style.display = 'none';
+
+  // 選択肢をシャッフルして表示
+  const shuffledChoices = shuffleArray([...q.choices]);
+  shuffledChoices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.textContent = choice;
+    btn.className = 'choice';
+    btn.onclick = () => checkAnswer(choice, btn);
+    choicesDiv.appendChild(btn);
+  });
+}
+
+function checkAnswer(choice, btn) {
+  const correctAnswer = quiz[current].a;
+  if(choice === correctAnswer) {
+    btn.classList.add('correct');
+    document.getElementById('message').textContent = '✅ 正解！次へ進もう';
+    document.getElementById('nextBtn').style.display = 'inline-block';
+  } else {
+    btn.classList.add('wrong');
+    document.getElementById('message').textContent = '❌ 間違い！もう一度選んで';
+  }
+}
+
+document.getElementById('nextBtn').onclick = () => {
+  current++;
+  if(current < quiz.length) {
+    showQuestion();
+  } else {
+    document.getElementById('quiz-container').style.display = 'none';
+    document.getElementById('result').style.display = 'block';
+  }
+}
+
+showQuestion();
+</script>
+</body>
+</html>
